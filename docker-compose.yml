@@ -1,2 +1,31 @@
 mysql:
-    image: mysql:
+    image: mysql:8.0
+    ports: 
+        - 3306:3306
+        - 3306:3306
+    environment:
+        MYSQL_ROOT_PASSWORD: jonnyscript
+    volumes:
+        - ../../databases/mysql:/var/lib/mysql        
+    container_name: servicio_mysql8
+phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+        - 8080:80
+    links:
+        - mysql
+    environment:
+        PMA_HOST: mysql
+        PMA_PORT: 3306
+    container_name: servicio_phpmyadmin
+apache2:
+    image: phpcuong/magento2-apache2:2.0
+    ports:
+        - 80:80
+        - 10000:10000
+        - 443:443
+    links:
+        - mysql
+    volumes:
+        - ../../carpeta_de_codigo:/var/www/html
+  container_name: servicio_apache2
