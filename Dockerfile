@@ -6,7 +6,7 @@ RUN apt-get update
 RUN apt-get -y install git wget curl nano unzip 
 
 # Configurando SSH
-RUN apt-get -y install opernssh-server
+RUN apt-get -y install openssh-server
 RUN service ssh start
 
 # Intsalando Apache 2 como servidor web
