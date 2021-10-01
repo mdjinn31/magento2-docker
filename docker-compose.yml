@@ -19,7 +19,7 @@ phpmyadmin:
         PMA_PORT: 3306
     container_name: servicio_phpmyadmin
 apache2:
-    image: mdjinn31/magento_2
+    image: phpcuong/magento2-apache2:2.0
     ports:
         - 80:80
         - 10000:10000
@@ -27,5 +27,5 @@ apache2:
     links:
         - mysql
     volumes:
-        - ../../carpeta_de_codigo:/var/www/html
-  container_name: servicio_apache2
+        - ../../PhpstormProjects:/var/www/html
+    container_name: servicio_apache2

@@ -2,8 +2,15 @@ FROM ubuntu
 LABEL maintainer="Jonathan Rivera <mdjinn31@gmail.com>" 
 
 # Instalacion Basica del contenedor
-RUN apt-get update
-RUN apt-get -y install git wget curl nano unzip 
+ENV TZ=America/Guatemala \
+    DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install tzdata
+
+
+RUN apt-get -y install git wget curl nano unzip apt-transport-https software-properties-common certbot
+
 
 # Configurando SSH
 RUN apt-get -y install openssh-server
@@ -29,10 +36,10 @@ RUN composer -v
 
 # Instalando Webmin para administrar el contenedor
 RUN apt-get upgrade -y
-RUN echo "deb http://download.webmin.com/download/repository sarge contrib" >> /etc/apt/sources.list
-RUN wget http://www.webmin.com/jcameron-key.asc
-RUN apt-key add jcameron-key.asc
+RUN wget -q http://www.webmin.com/jcameron-key.asc -O- | apt-key add -
+RUN add-apt-repository "deb [arch=amd64] http://download.webmin.com/download/repository sarge contrib"
 RUN apt-get update
+
 RUN rm /etc/apt/apt.conf.d/docker-gzip-indexes
 RUN apt-get purge apt-show-versions
 RUN rm /var/lib/apt/lists/*lz4
@@ -41,6 +48,7 @@ RUN apt-get -y install apt-show-versions
 RUN apt-get -y install webmin
 RUN /etc/init.d/webmin start
 RUN /usr/share/webmin/changepass.pl /etc/webmin root root
+RUN service apache2 start
 
 # Levantamos e iniciamos el servidorStart
 EXPOSE 80 10000 443
